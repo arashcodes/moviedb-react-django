@@ -11,10 +11,13 @@ class App extends React.Component {
     this.state = {
       trendingMovies: [],
       myMovies: [],
+      view: 'home',
     }
 
     this.getTrendingMovies = this.getTrendingMovies.bind(this);
     this.addMovies = this.addMovies.bind(this);
+    this.goToHome = this.goToHome.bind(this);
+    this.goToMyMovies = this.goToMyMovies.bind(this);
   }
 
   componentDidMount() {
@@ -28,9 +31,12 @@ class App extends React.Component {
       .then(id => axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=${pv.api_key}&language=en-US`)
       .then(res => {
         const currMovies = this.state.myMovies.slice();
+        currMovies.push(res.data);
         this.setState({
           myMovies: currMovies,
         })
+        alert('Movie added!')
+        console.log(this.state.myMovies)
       })
       )
       .catch(err => console.log(err));
@@ -44,12 +50,28 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
+  goToHome() {
+    this.setState({
+      view: 'home',
+    })
+  }
+
+  goToMyMovies() {
+    this.setState({
+      view: 'my list',
+    })
+  }
+
   render() {
     return (
       <div>
         <h1>Movie List</h1>
+        <button onClick={this.goToHome} >Home</button>
+        <button onClick={this.goToMyMovies} >My List</button>
+        <br />
+        <br />
         <AddMovies addMovies={this.addMovies} />
-        <MovieList movies={this.state.trendingMovies} />
+        <MovieList movies={this.state.view === 'home' ? this.state.trendingMovies : this.state.myMovies} />
       </div>
     )
   }
