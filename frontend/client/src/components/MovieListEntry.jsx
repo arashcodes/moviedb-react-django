@@ -14,7 +14,6 @@ class MovieListEntry extends React.Component {
   render() {
     const rest = this.props.movie.backdrop_path;
     return (
-      // <li>Movie image here</li>
       <div className="gallery">
         <img src={imageBaseUrl + rest} />
       </div>
