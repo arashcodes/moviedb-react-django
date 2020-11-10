@@ -1,12 +1,25 @@
 import React from 'react';
 
+const imageBaseUrl = 'http://image.tmdb.org/t/p/w300';
 
-const MovieListEntry = (props) => {
-  const imageBaseUrl = 'http://image.tmdb.org/t/p/w500';
-  const rest = props.movie.backdrop_path;
-  return (
-    <img src ={imageBaseUrl + rest} alt='movie poster' />
-  )
+class MovieListEntry extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      
+    }
+  }
+
+  render() {
+    const rest = this.props.movie.backdrop_path;
+    return (
+      // <li>Movie image here</li>
+      <div className="gallery">
+        <img src={imageBaseUrl + rest} />
+      </div>
+    )
+  }
 }
 
 export default MovieListEntry;
