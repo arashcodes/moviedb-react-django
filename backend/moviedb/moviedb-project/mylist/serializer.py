@@ -4,4 +4,4 @@ from . models import *
 class ReactSerializer(serializers.ModelSerializer): 
   class Meta: 
     model = List 
-    fields = ['title', 'movie_id', 'img_url']
+    fields = ['title', 'movie_id', 'backdrop_path']

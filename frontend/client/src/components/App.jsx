@@ -9,15 +9,14 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      trendingMovies: [],
-      myMovies: [],
-      view: 'home',
+      renderedMovies: [],
     }
 
     this.getTrendingMovies = this.getTrendingMovies.bind(this);
     this.addMovies = this.addMovies.bind(this);
     this.goToHome = this.goToHome.bind(this);
     this.goToMyMovies = this.goToMyMovies.bind(this);
+    this.getMyMovies = this.getMyMovies.bind(this);
   }
 
   componentDidMount() {
@@ -30,36 +29,43 @@ class App extends React.Component {
       .then(res => res.data.results[0].id)
       .then(id => axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=${pv.api_key}&language=en-US`)
       .then(res => {
-        const currMovies = this.state.myMovies.slice();
-        currMovies.push(res.data);
-        this.setState({
-          myMovies: currMovies,
-        })
-        alert('Movie added!')
-        console.log(this.state.myMovies)
-      })
-      )
+        const movieObj = {
+          title: res.data.title,
+          movie_id: res.data.id,
+          backdrop_path: res.data.backdrop_path,
+        }
+
+        axios.post(`http://127.0.0.1:8000/add/`, movieObj)
+        .then(() => alert('Movie added!'))
+        .catch(err => console.log(err));
+      }))
       .catch(err => console.log(err));
   }
 
   getTrendingMovies() {
     axios.get(`https://api.themoviedb.org/3/trending/all/day?api_key=${pv.api_key}`)
       .then(res => this.setState({
-        trendingMovies: res.data.results,
+        renderedMovies: res.data.results,
       }))
       .catch(err => console.log(err));
   }
 
+  getMyMovies() {
+    axios.get(`http://127.0.0.1:8000/list/`)
+      .then(res => {
+        this.setState({
+          renderedMovies: res.data,
+        })
+      })
+      .catch(err => console.log(err));
+  }
+
   goToHome() {
-    this.setState({
-      view: 'home',
-    })
+    this.getTrendingMovies();
   }
 
   goToMyMovies() {
-    this.setState({
-      view: 'my list',
-    })
+    this.getMyMovies();
   }
 
   render() {
@@ -71,7 +77,7 @@ class App extends React.Component {
         <br />
         <br />
         <AddMovies addMovies={this.addMovies} />
-        <MovieList movies={this.state.view === 'home' ? this.state.trendingMovies : this.state.myMovies} />
+        <MovieList movies={this.state.renderedMovies} />
       </div>
     )
   }

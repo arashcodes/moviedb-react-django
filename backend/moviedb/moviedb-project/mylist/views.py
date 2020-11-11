@@ -8,7 +8,7 @@ class ReactView(APIView):
   serializer_class = ReactSerializer 
 
   def get(self, request): 
-    detail = [ {"title": detail.title, "movie_id": detail.movie_id, "img_url": detail.img_url}  
+    detail = [ {"title": detail.title, "movie_id": detail.movie_id, "backdrop_path": detail.backdrop_path}  
     for detail in List.objects.all()] 
     return Response(detail) 
 
